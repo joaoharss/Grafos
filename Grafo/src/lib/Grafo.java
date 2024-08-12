@@ -90,10 +90,20 @@ public class Grafo<T> {
 
         System.out.println("Árvore Geradora Mínima (AGM):");
         double pesoTotal = 0;
+        Set<String> arestasProcessadas = new HashSet<>();
+
         for (Vertice<T> v : agm.getVertices()) {
             for (Aresta a : v.getDestinos()) {
-                System.out.println(a);
-                pesoTotal += a.getPeso();
+                // Cria uma representação única da aresta, independente da direção
+                String aresta = v.getValor() + "-" + a.getDestino().getValor();
+                String arestaInversa = a.getDestino().getValor() + "-" + v.getValor();
+
+                // Se a aresta ou a aresta inversa já foram processadas, não a processe novamente
+                if (!arestasProcessadas.contains(aresta) && !arestasProcessadas.contains(arestaInversa)) {
+                    System.out.println(a);
+                    pesoTotal += a.getPeso();
+                    arestasProcessadas.add(aresta);  // Marca a aresta como processada
+                }
             }
         }
         System.out.println("Peso total da AGM: " + pesoTotal);
