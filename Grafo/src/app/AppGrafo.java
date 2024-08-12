@@ -49,7 +49,7 @@ public class AppGrafo {
                     if (grafoCidades.isConexo()) {
                         grafoCidades.calcularAGM(); // Chamar o método a partir da instância grafoCidades
                     } else {
-                        System.out.println("O grafo não é conexo. Não é possível calcular a AGM.");
+                        System.err.println("O grafo não é conexo. Não é possível calcular a AGM.");
                     }
                     break;
                 case 4:
@@ -73,7 +73,7 @@ public class AppGrafo {
         if (grafoCidades.isConexo()) {
             gravarGrafoEmArquivo(grafoCidades.calcularAGM(), "agm.txt");
         } else {
-            System.out.println("O grafo não é conexo. A AGM não será gravada.");
+            System.err.println("O grafo não é conexo. A AGM não será gravada.");
         }
 
         System.out.println("Saindo...");
@@ -138,9 +138,9 @@ public class AppGrafo {
 
 
     private void adicionarCidade(Scanner scanner) {
-    System.out.print("Nome da cidade: ");
-    String nomeCidade = scanner.nextLine();
-    grafoCidades.adicionarVertice(nomeCidade);
+        System.out.print("Nome da cidade: ");
+        String nomeCidade = scanner.nextLine();
+        grafoCidades.adicionarVertice(nomeCidade);
     }
 
     private void adicionarRota(Scanner scanner) {
