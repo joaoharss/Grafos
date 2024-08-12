@@ -158,4 +158,25 @@ public class Grafo<T> {
         System.out.println("FIM");
         System.out.println("Distância total: " + distancias.get(verticeDestino));
     }
+    public boolean isConexo() {
+        if (vertices.isEmpty()) {
+            return true; // Grafo vazio é considerado conexo
+        }
+
+        Set<Vertice<T>> visitados = new HashSet<>();
+        dfs(vertices.get(0), visitados); // Começa a busca a partir do primeiro vértice
+
+        return visitados.size() == vertices.size(); // Todos os vértices foram visitados?
+    }
+
+    private void dfs(Vertice<T> vertice, Set<Vertice<T>> visitados) {
+        visitados.add(vertice);
+        for (Aresta aresta : vertice.getDestinos()) {
+            Vertice<T> destino = aresta.getDestino();
+            if (!visitados.contains(destino)) {
+                dfs(destino, visitados);
+            }
+        }
+    }
+
 }
