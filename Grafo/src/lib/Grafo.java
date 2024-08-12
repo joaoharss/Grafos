@@ -18,7 +18,7 @@ public class Grafo<T> {
         return novo;
     }
 
-    private Vertice<T> obterVertice(T valor) {
+    public Vertice<T> obterVertice(T valor) {
         for (Vertice<T> v : this.vertices) {
             if (v.getValor().equals(valor)) {
                 return v;
@@ -60,11 +60,13 @@ public class Grafo<T> {
             return agm; // Grafo vazio, AGM também é vazio
         }
 
-        Vertice<T> verticeInicial = this.getVertices().get(0); // Começa com o primeiro vértice
-        PriorityQueue<Aresta> filaPrioridade = new PriorityQueue<>(Comparator.comparingDouble(Aresta::getPeso));
         Set<Vertice<T>> verticesIncluidos = new HashSet<>();
-        verticesIncluidos.add(verticeInicial);
+        PriorityQueue<Aresta> filaPrioridade = new PriorityQueue<>(Comparator.comparingDouble(Aresta::getPeso));
 
+        // Começar com um vértice arbitrário
+        Vertice<T> verticeInicial = this.getVertices().get(0);
+        verticesIncluidos.add(verticeInicial);
+        agm.adicionarVertice(verticeInicial.getValor()); // Adicionar o vértice inicial à AGM
         for (Aresta aresta : verticeInicial.getDestinos()) {
             filaPrioridade.offer(aresta);
         }
@@ -75,7 +77,7 @@ public class Grafo<T> {
             Vertice<T> destino = arestaMenor.getDestino();
 
             if (!verticesIncluidos.contains(destino)) {
-                agm.adicionarVertice(origem.getValor());
+                // Adicionar apenas o vértice de destino à AGM (o de origem já foi adicionado)
                 agm.adicionarVertice(destino.getValor());
                 agm.adicionarAresta(origem.getValor(), destino.getValor(), arestaMenor.getPeso());
                 verticesIncluidos.add(destino);

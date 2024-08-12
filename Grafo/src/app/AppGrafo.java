@@ -140,7 +140,14 @@ public class AppGrafo {
     private void adicionarCidade(Scanner scanner) {
         System.out.print("Nome da cidade: ");
         String nomeCidade = scanner.nextLine();
-        grafoCidades.adicionarVertice(nomeCidade);
+
+        // Verificar se a cidade já existe
+        if (grafoCidades.obterVertice(nomeCidade) != null) {
+            System.out.println("A cidade " + nomeCidade + " já existe no grafo.");
+        } else {
+            grafoCidades.adicionarVertice(nomeCidade);
+            System.out.println("Cidade " + nomeCidade + " adicionada com sucesso!");
+        }
     }
 
     private void adicionarRota(Scanner scanner) {
