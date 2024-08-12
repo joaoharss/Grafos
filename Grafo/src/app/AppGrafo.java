@@ -1,5 +1,6 @@
 package app;
 
+import lib.Aresta;
 import lib.Grafo;
 import lib.Vertice;
 
@@ -45,7 +46,11 @@ public class AppGrafo {
                     adicionarRota(scanner);
                     break;
                 case 3:
-                    Grafo<String> agm = grafoCidades.calcularAGM();
+                    if (grafoCidades.isConexo()) {
+                        grafoCidades.calcularAGM(); // Chamar o método a partir da instância grafoCidades
+                    } else {
+                        System.out.println("O grafo não é conexo. Não é possível calcular a AGM.");
+                    }
                     break;
                 case 4:
                     calcularCaminhoMinimo(scanner, grafoCidades); // Grafo original
@@ -64,8 +69,14 @@ public class AppGrafo {
 
     private void gravarGrafosESair() {
         gravarGrafoEmArquivo(grafoCidades, "grafoCompleto.txt");
-        gravarGrafoEmArquivo(grafoCidades.calcularAGM(), "agm.txt");
-        System.out.println("Grafos gravados com sucesso. Saindo...");
+
+        if (grafoCidades.isConexo()) {
+            gravarGrafoEmArquivo(grafoCidades.calcularAGM(), "agm.txt");
+        } else {
+            System.out.println("O grafo não é conexo. A AGM não será gravada.");
+        }
+
+        System.out.println("Saindo...");
     }
 
     private void carregarGrafoDeArquivo(String nomeArquivo) {
@@ -95,32 +106,53 @@ public class AppGrafo {
 
     private void gravarGrafoEmArquivo(Grafo<String> grafo, String nomeArquivo) {
         try (PrintWriter writer = new PrintWriter(new File(nomeArquivo))) {
-            writer.println(grafo.getVertices().size());
+            int numVertices = grafo.getVertices().size();
+            writer.println(numVertices); // Número de vértices
+
+            // Escrever os nomes dos vértices
             for (Vertice<String> vertice : grafo.getVertices()) {
                 writer.println(vertice.getValor());
             }
-            // ... (gravar a matriz de adjacência)
+
+            // Escrever a matriz de adjacência com os pesos
+            for (Vertice<String> verticeOrigem : grafo.getVertices()) {
+                for (Vertice<String> verticeDestino : grafo.getVertices()) {
+                    float peso = 0; // Valor padrão para quando não há aresta
+                    for (Aresta aresta : verticeOrigem.getDestinos()) {
+                        if (aresta.getDestino() == verticeDestino) {
+                            peso = aresta.getPeso();
+                            break;
+                        }
+                    }
+                    writer.print(peso);
+                    if (verticeDestino != grafo.getVertices().get(numVertices - 1)) {
+                        writer.print(",");
+                    }
+                }
+                writer.println();
+            }
         } catch (FileNotFoundException e) {
             System.err.println("Erro ao gravar arquivo: " + nomeArquivo);
         }
     }
 
-private void adicionarCidade(Scanner scanner) {
+
+    private void adicionarCidade(Scanner scanner) {
     System.out.print("Nome da cidade: ");
     String nomeCidade = scanner.nextLine();
     grafoCidades.adicionarVertice(nomeCidade);
-}
+    }
 
-private void adicionarRota(Scanner scanner) {
-    System.out.print("Cidade de origem: ");
-    String origem = scanner.nextLine();
-    System.out.print("Cidade de destino: ");
-    String destino = scanner.nextLine();
-    System.out.print("Distância: ");
-    float distancia = scanner.nextFloat();
-    scanner.nextLine(); // Consumir a quebra de linha
-    grafoCidades.adicionarAresta(origem, destino, distancia);
-}
+    private void adicionarRota(Scanner scanner) {
+        System.out.print("Cidade de origem: ");
+        String origem = scanner.nextLine();
+        System.out.print("Cidade de destino: ");
+        String destino = scanner.nextLine();
+        System.out.print("Distância: ");
+        float distancia = scanner.nextFloat();
+        scanner.nextLine(); // Consumir a quebra de linha
+        grafoCidades.adicionarAresta(origem, destino, distancia);
+    }
     private void calcularCaminhoMinimo(Scanner scanner, Grafo<String> grafo) {
         System.out.print("Cidade de origem: ");
         String origem = scanner.nextLine();
