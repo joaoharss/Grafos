@@ -46,6 +46,7 @@ public class Grafo<T> {
         }
 
         verticeOrigem.adicionarDestino(new Aresta(verticeOrigem, verticeDestino, peso));
+        verticeDestino.adicionarDestino(new Aresta(verticeDestino, verticeOrigem, peso));
     }
 
     public ArrayList<Vertice<T>> getVertices() {
