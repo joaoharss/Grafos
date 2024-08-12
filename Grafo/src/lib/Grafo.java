@@ -94,15 +94,13 @@ public class Grafo<T> {
 
         for (Vertice<T> v : agm.getVertices()) {
             for (Aresta a : v.getDestinos()) {
-                // Cria uma representação única da aresta, independente da direção
                 String aresta = v.getValor() + "-" + a.getDestino().getValor();
                 String arestaInversa = a.getDestino().getValor() + "-" + v.getValor();
 
-                // Se a aresta ou a aresta inversa já foram processadas, não a processe novamente
                 if (!arestasProcessadas.contains(aresta) && !arestasProcessadas.contains(arestaInversa)) {
                     System.out.println(a);
                     pesoTotal += a.getPeso();
-                    arestasProcessadas.add(aresta);  // Marca a aresta como processada
+                    arestasProcessadas.add(aresta);
                 }
             }
         }
